@@ -48,7 +48,7 @@ class reportePDF(object):
         encabezadoFecha.drawOn(canvas, archivoPDF.leftMargin, 736)
  
         # Pie de página
-        piePagina = Paragraph("Reporte generado por Andres Niño.", estilos["Normal"])
+        piePagina = Paragraph("Reporte de Tutorias. UPSLP", estilos["Normal"])
         anchura, altura = piePagina.wrap(archivoPDF.width, archivoPDF.bottomMargin)
         piePagina.drawOn(canvas, archivoPDF.leftMargin, 15 * mm + (0.2 * inch))
  
@@ -73,7 +73,7 @@ class reportePDF(object):
         nuevosDatos = [tuple(encabezado)]
 
         for dato in self.datos:
-            nuevosDatos.append([Paragraph(str(dato[clave]), estiloNormal) for clave in claves])
+            nuevosDatos.append([Paragraph(dato[clave]), estiloNormal) for clave in claves])
             
         return nuevosDatos
         

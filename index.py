@@ -31,6 +31,8 @@ def logging():
       correo = request.form['correo']
       current_date = request.form['current_date']
       pwd = request.form['pwd']
+
+      print(pwd)
  
       conn = mysql.connect()
       pointer = conn.cursor()
@@ -41,10 +43,14 @@ def logging():
       for email in emails:
          if correo == email[0]:
 
-            pointer.execute('SELECT id_tutor FROM maestros WHERE correo = %s and password = %s', email[0], pwd)
+            pointer.execute('SELECT id_tutor FROM maestros WHERE correo = %s', email[0])
             id_Tutor = pointer.fetchone()
+
+            pointer.execute('SELECT password FROM maestros WHERE correo = %s', email[0])
+            _getpass = pointer.fetchone()
             
-            flag = True
+            if pwd == _getpass[0]:
+               flag = True
          else:
             pass
       
@@ -78,10 +84,38 @@ def print_report():
    pointer.execute('SELECT * FROM alumnos WHERE tutor = %s', str(IDT))
    tutelados = pointer.fetchall()
 
-   atributes = {'Numero', 'Nombre', 'Carrera', 'Semestre', 'Grupo', 'Bachillerato', 'Reprobadas', 'Firma', 'Fecha', 'Horario'}
+   generarReporte(tutelados)
 
    return render_template('return.html') 
  
+def generarReporte(query_tutelados):
+        
+   def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
+
+   titulo = "LISTADO DE TUTELADOS"
+
+   cabecera = (
+      ("id_alumno", "N°"),
+      ("fullname_alumno", "Nombre"),
+      ("carrera", "Carrera"),
+      ("semestre", "Semestre"),
+      ("grupo", "Grupo"),
+      ("promedio_bach", "Promedio Bachillerato"),
+      ("materias_reprobadas", "Materias Reprobadas"),
+      ("firma_estudiante", "Firma"),
+      ("fecha", "Fecha"),
+      ("horario", "Horario")
+      )
+
+   nombrePDF = "Tutelados_fecha.pdf"
+
+   reporte = reportePDF(titulo, cabecera, query_tutelados, nombrePDF).Exportar()
+
+   print(reporte)
    
 
 @app.route('/about')
