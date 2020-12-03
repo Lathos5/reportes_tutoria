@@ -1,7 +1,6 @@
 from jinja2 import Environment, FileSystemLoader
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, make_response
 from flaskext.mysql import MySQL
-from PDF import reportePDF, numeracionPaginas
 import os
 import pdfkit 
 
@@ -32,7 +31,7 @@ def logging():
       current_date = request.form['current_date']
       pwd = request.form['pwd']
 
-      print(pwd)
+      print(current_date)
  
       conn = mysql.connect()
       pointer = conn.cursor()
@@ -62,7 +61,7 @@ def logging():
          pointer.execute('SELECT id_tutor, nombre_tutor, apep_tutor, apem_tutor FROM maestros WHERE id_tutor = %s', id_Tutor[0])
          tutores = pointer.fetchall()
 
-         return render_template('tutor_frame.html', tutelados = alumnos, tutores = tutores)
+         return render_template('tutor_frame.html', tutelados = alumnos, tutores = tutores, date = current_date)
       else: 
          return 'Error de sesion. Vuelva a ingresar Datos'
       
@@ -77,45 +76,33 @@ def print_report():
    conn = mysql.connect()
    pointer = conn.cursor()
 
-   IDT = request.args.get('id_tutor')
+   """
+   Al parecer, algunos interpretes no reconocen el PATH, asi que se tiene que especificar la ruta para el modulo que convierte de HTML a PDF
+   """
+   path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+   config = pdfkit.configuration(wkhtmltopdf = path_wkhtmltopdf)
 
-   print (IDT)
+   IDT = request.args.get('id_tutor')
+   current_date = request.args.get('report_date')
+   nombre = request.args.get('tutor_name')
+   paterno = request.args.get('tutor_apep')
+   materno = request.args.get('tutor_apem')
+
 
    pointer.execute('SELECT * FROM alumnos WHERE tutor = %s', str(IDT))
    tutelados = pointer.fetchall()
 
-   generarReporte(tutelados)
+   _getTemplate = render_template('return.html', tutelados = tutelados, current_date = current_date, nombre = nombre, paterno = paterno, materno = materno) 
 
-   return render_template('return.html') 
- 
-def generarReporte(query_tutelados):
-        
-   def dict_factory(cursor, row):
-        d = {}
-        for idx, col in enumerate(cursor.description):
-            d[col[0]] = row[idx]
-        return d
+   _responsestring = pdfkit.from_string(_getTemplate, False, configuration=config)
 
-   titulo = "LISTADO DE TUTELADOS"
+   response = make_response(_responsestring)
 
-   cabecera = (
-      ("id_alumno", "N°"),
-      ("fullname_alumno", "Nombre"),
-      ("carrera", "Carrera"),
-      ("semestre", "Semestre"),
-      ("grupo", "Grupo"),
-      ("promedio_bach", "Promedio Bachillerato"),
-      ("materias_reprobadas", "Materias Reprobadas"),
-      ("firma_estudiante", "Firma"),
-      ("fecha", "Fecha"),
-      ("horario", "Horario")
-      )
+   response.headers['Content-Type'] = 'application/pdf'
+   
+   response.headers['Content-Disposition'] = 'inline;filename='+current_date+'_'+paterno+'.pdf'
 
-   nombrePDF = "Tutelados_fecha.pdf"
-
-   reporte = reportePDF(titulo, cabecera, query_tutelados, nombrePDF).Exportar()
-
-   print(reporte)
+   return response
    
 
 @app.route('/about')

@@ -32,6 +32,10 @@ Se almacenan los archivos html para la creacion del sitio dinamico.
 Comprende el archivo con todos los metodos, llamadas a templates y conexiones para la operabilidad del sitio. Es el núcleo.
 >>>../index.py
 
-<--Python classes-->
-Comprende la clase generadora de PDF. Cada instancia de ella, realiza una impresion de PDF.
->>>../PDF.py
+
+###NO IMPLEMENTADO{ 
+    <--Python classes-->
+    Comprende la clase generadora de PDF. Cada instancia de ella, realiza una impresion de PDF.
+    >>>../Not_Implemented/PDF.py
+    >>>../Not_Implemented/sqlite_query_PDF.py
+}

@@ -28,6 +28,7 @@
                 <td>{{ tutelado.6 }}</td>
                 <td>{{ tutelado.7 }}</td>
                 <td>{{ tutelado.8 }}</td>
+                <td>{{ tutelado.9 }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -37,6 +38,8 @@
 
 <form action="/print" method="get">
     <input type="hidden" name="id_tutor" value="{{ tutor.0 }}"><br/>
-
-    <input type="submit" value="P D F" class="btn btn-danger" />
+    <input type="hidden" name="tutor_name" value="{{ tutor.1 }}"><br/>
+    <input type="hidden" name="tutor_apep" value="{{ tutor.2 }}"><br/>
+    <input type="hidden" name="tutor_apem" value="{{ tutor.3 }}"><br/>
+    <input type="hidden" name="report_date" value="{{ date }}"> <input type="submit" value="P D F" class="btn btn-danger" />
 </form> {% endfor %} {% endblock %}

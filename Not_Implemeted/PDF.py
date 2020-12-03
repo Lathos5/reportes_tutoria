@@ -73,7 +73,7 @@ class reportePDF(object):
         nuevosDatos = [tuple(encabezado)]
 
         for dato in self.datos:
-            nuevosDatos.append([Paragraph(dato[clave]), estiloNormal) for clave in claves])
+            nuevosDatos.append([Paragraph(dato[int(clave)], estiloNormal) for clave in claves])
             
         return nuevosDatos
         
