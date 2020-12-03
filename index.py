@@ -1,5 +1,9 @@
+from jinja2 import Environment, FileSystemLoader
 from flask import Flask, render_template, request, url_for, redirect
-from flaskext.mysql import MySQL 
+from flaskext.mysql import MySQL
+from PDF import reportePDF, numeracionPaginas
+import os
+import pdfkit 
 
 app = Flask(__name__)
 
@@ -26,8 +30,7 @@ def logging():
 
       correo = request.form['correo']
       current_date = request.form['current_date']
-
-      #correo = "('"+correo+"',)"
+      pwd = request.form['pwd']
  
       conn = mysql.connect()
       pointer = conn.cursor()
@@ -37,19 +40,22 @@ def logging():
 
       for email in emails:
          if correo == email[0]:
-            pointer.execute('SELECT id_tutor FROM maestros WHERE correo = %s', email[0])
+
+            pointer.execute('SELECT id_tutor FROM maestros WHERE correo = %s and password = %s', email[0], pwd)
             id_Tutor = pointer.fetchone()
-            print(id_Tutor)
+            
             flag = True
          else:
             pass
       
       if flag :
+
          pointer.execute('SELECT * FROM alumnos WHERE tutor = %s', id_Tutor[0])
          alumnos = pointer.fetchall()
-         pointer.execute('SELECT nombre_tutor, apep_tutor, apem_tutor FROM maestros WHERE id_tutor = %s', id_Tutor[0])
+
+         pointer.execute('SELECT id_tutor, nombre_tutor, apep_tutor, apem_tutor FROM maestros WHERE id_tutor = %s', id_Tutor[0])
          tutores = pointer.fetchall()
-         print (tutores)
+
          return render_template('tutor_frame.html', tutelados = alumnos, tutores = tutores)
       else: 
          return 'Error de sesion. Vuelva a ingresar Datos'
@@ -60,9 +66,23 @@ def home():
    return render_template('tutor_frame.html')
 
 
-@app.route('/print')
+@app.route('/print/', methods = ['GET'])
 def print_report():
-   return 'Print function'
+   conn = mysql.connect()
+   pointer = conn.cursor()
+
+   IDT = request.args.get('id_tutor')
+
+   print (IDT)
+
+   pointer.execute('SELECT * FROM alumnos WHERE tutor = %s', str(IDT))
+   tutelados = pointer.fetchall()
+
+   atributes = {'Numero', 'Nombre', 'Carrera', 'Semestre', 'Grupo', 'Bachillerato', 'Reprobadas', 'Firma', 'Fecha', 'Horario'}
+
+   return render_template('return.html') 
+ 
+   
 
 @app.route('/about')
 def about():

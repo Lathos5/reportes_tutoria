@@ -1,8 +1,8 @@
 {% extends "layout.html" %} {% block content %}
-<P>Bienvenido {% for tutor in tutores %} {{ tutor.0 }} {{ tutor.1 }} {{ tutor.2 }} {% endfor %}</P>
+<P>Bienvenido {% for tutor in tutores %} {{ tutor.1 }} {{ tutor.2 }} {{ tutor.3 }} {% endfor %}</P>
 <div class="col-md-7">
     <table class="table table-bordered bg-white table-bg table-hover">
-        <thead>
+        <thead class="bg-warning">
             <tr>
                 <td>N°</td>
                 <td>Nombre del estudiante</td>
@@ -33,4 +33,10 @@
         </tbody>
     </table>
 </div>
-<button type="button" class="btn btn-danger">P D F</button> {% endblock %}
+{% for tutor in tutores %}
+
+<form action="/print" method="get">
+    <input type="hidden" name="id_tutor" value="{{ tutor.0 }}"><br/>
+
+    <input type="submit" value="P D F" class="btn btn-danger" />
+</form> {% endfor %} {% endblock %}
