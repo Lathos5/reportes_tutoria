@@ -1,5 +1,6 @@
 {% extends "layout.html" %} {% block content %}
 <P>Bienvenido {% for tutor in tutores %} {{ tutor.1 }} {{ tutor.2 }} {{ tutor.3 }} {% endfor %}</P>
+<p></p>
 <div class="col-md-7">
     <table class="table table-bordered bg-white table-bg table-hover">
         <thead class="bg-warning">
@@ -34,12 +35,17 @@
         </tbody>
     </table>
 </div>
+<table WIDTH="100%">
+    <tr>
+        <td ALIGN="left"><input type="submit" value="P D F" class="btn btn-danger" /></td>
+        <td ALIGN="right"><a class="btn btn-dark" href="/new">A G R E G A R</a></td>
+    </tr>
+</table>
 {% for tutor in tutores %}
-
 <form action="/print" method="get">
     <input type="hidden" name="id_tutor" value="{{ tutor.0 }}"><br/>
     <input type="hidden" name="tutor_name" value="{{ tutor.1 }}"><br/>
     <input type="hidden" name="tutor_apep" value="{{ tutor.2 }}"><br/>
     <input type="hidden" name="tutor_apem" value="{{ tutor.3 }}"><br/>
-    <input type="hidden" name="report_date" value="{{ date }}"> <input type="submit" value="P D F" class="btn btn-danger" />
+    <input type="hidden" name="report_date" value="{{ date }}"><br/>
 </form> {% endfor %} {% endblock %}
