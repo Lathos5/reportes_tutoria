@@ -1,0 +1,4 @@
+Copiar la carpeta en el disco local C.
+Entrar a PowerShell y ubicarse dentro de la carpeta app
+Ejecutar el comando docker-compose up
+abrir en el navegador el siguiente link localhost:5000
