@@ -1,0 +1,51 @@
+{% extends "layout.html" %} {% block content %}
+<P>Bienvenido {% for tutor in tutores %} {{ tutor.1 }} {{ tutor.2 }} {{ tutor.3 }} {% endfor %}</P>
+<p></p>
+<div class="col-md-7">
+    <table class="table table-bordered bg-white table-bg table-hover">
+        <thead class="bg-warning">
+            <tr>
+                <td>N°</td>
+                <td>Nombre del estudiante</td>
+                <td>Carrera</td>
+                <td>Semestre</td>
+                <td>Grupo</td>
+                <td>Promedio Bachillerato</td>
+                <td>Materias Reprobadas</td>
+                <td>Firma</td>
+                <td>Fecha</td>
+                <td>Horario</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tutelado in tutelados %}
+            <tr>
+                <td>{{ tutelado.0 }}</td>
+                <td>{{ tutelado.1 }}</td>
+                <td>{{ tutelado.2 }}</td>
+                <td>{{ tutelado.3 }}</td>
+                <td>{{ tutelado.4 }}</td>
+                <td>{{ tutelado.5 }}</td>
+                <td>{{ tutelado.6 }}</td>
+                <td>{{ tutelado.7 }}</td>
+                <td>{{ tutelado.8 }}</td>
+                <td>{{ tutelado.9 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% for tutor in tutores %}
+<form action="/print" method="get">
+    <input type="hidden" name="id_tutor" value="{{ tutor.0 }}"><br/>
+    <input type="hidden" name="tutor_name" value="{{ tutor.1 }}"><br/>
+    <input type="hidden" name="tutor_apep" value="{{ tutor.2 }}"><br/>
+    <input type="hidden" name="tutor_apem" value="{{ tutor.3 }}"><br/>
+    <input type="hidden" name="report_date" value="{{ date }}"><br/>
+    <table WIDTH="100%">
+        <tr>
+            <td ALIGN="left"><input type="submit" value="P D F" class="btn btn-danger" /></td>
+            <td ALIGN="right"><a class="btn btn-dark" href="/new">A G R E G A R</a></td>
+        </tr>
+    </table>
+</form> {% endfor %} {% endblock %}

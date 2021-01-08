@@ -1,0 +1,9 @@
+body {
+    background: #23074d;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #23074d, #cc5333);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #23074d, #cc5333);
+    background-size: cover;
+    font-family: 'Open Sans', sans-serif;
+}
